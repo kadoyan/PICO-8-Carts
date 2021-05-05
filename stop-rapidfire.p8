@@ -8,10 +8,13 @@ release=true
 
 ::_::
 cls()
-if btn(4)
-and release then
-	fire=true
-	release=false
+if btn(4) then
+	if release then
+		fire=true
+		release=false
+	else
+		fire=false
+	end
 end
 if not btn(4)
 and not release then
