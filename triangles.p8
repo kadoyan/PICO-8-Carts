@@ -29,7 +29,7 @@ end
 function _draw()
 	cls()
 	for n=1,#a do
-		draw_tri(a[n],n%14)
+		draw_tri(a[n],n%14+1)
 	end
 	print("cpu:"..stat(1),1,1,15)
 	print("num of:"..#a,1,7,15)
@@ -37,7 +37,7 @@ end
 -->8
 --functions
 
---get X axis of the point on the line
+--get x axis of the point on the line
 p2calc=function(x1,y1,x2,y2,y)
 	local x=
 	x1+((x2-x1)*(y-y1))/(y2-y1)
@@ -113,9 +113,6 @@ draw_tri=function(t,c)
 		t[3].nx,t[3].ny,y)
 		line(x1,y,x2,y,c)
 	end
-	--print("1",t[1].x+2,t[1].y-4,5)
-	--print("2",t[2].x+2,t[2].y-4,5)
-	--print("3",t[3].x+2,t[3].y-4,5)
 end
 
 calc_tri=function(t,x,y)
