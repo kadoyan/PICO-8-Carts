@@ -45,6 +45,8 @@ p2calc=function(x1,y1,x2,y2,y)
 end
 
 --sort table
+--original code:
+--https://pico-8.fandom.com/wiki/Qsort
 function qsort(a,c,l,r)
 	c,l,r=c or function(a,b) return a<b end,l or 1,r or #a
 	if l<r then
