@@ -97,6 +97,7 @@ end
 --move triangle
 draw_tri=function(t,c)
 	local c=c or 7
+	color(c)
 	for y=t[1].ny,t[2].ny do
 		local x1=
 		p2calc(t[1].nx,t[1].ny,
@@ -104,7 +105,7 @@ draw_tri=function(t,c)
 		local x2=
 		p2calc(t[1].nx,t[1].ny,
 		t[3].nx,t[3].ny,y)
-		line(x1,y,x2,y,c)
+		rectfill(x1,y,x2,y)
 	end
 	for y=t[2].ny,t[3].ny do
 		local x1=
@@ -113,7 +114,7 @@ draw_tri=function(t,c)
 		local x2=
 		p2calc(t[1].nx,t[1].ny,
 		t[3].nx,t[3].ny,y)
-		line(x1,y,x2,y,c)
+		rectfill(x1,y,x2,y)
 	end
 end
 
