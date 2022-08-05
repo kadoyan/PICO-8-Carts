@@ -3,7 +3,9 @@ version 36
 __lua__
 function _init()
 	a={}
-	for i=1,60 do
+	r={}
+	draw=0
+	for i=1,90 do
 		add(a,{
 			{x=frnd(100,-20),
 				y=frnd(100,-20)},
@@ -21,72 +23,28 @@ end
 
 function _update()
 	cnt+=0.01
-	for a in all(a) do
-		calc_tri(a,a.x,a.y)
+	r={}
+	for n=1,#a do
+		add(r,calc_tri(a[n]))
 	end
 end
 
 function _draw()
 	cls()
-	for n=1,#a do
-		draw_tri(a[n],n%14+1)
+	for n=1,#r do
+		draw_tri(r[n],n%14+1)
 	end
 	print("cpu:"..stat(1),1,1,15)
 	print("num of:"..#a,1,7,15)
+	print("line:"..draw,1,13,15)
+	draw=0
 end
 -->8
 --functions
 
 --get x axis of the point on the line
 p2calc=function(x1,y1,x2,y2,y)
-	local x=
-	x1+((x2-x1)*(y-y1))/(y2-y1)
-	return x
-end
-
---sort table
---original code:
---https://pico-8.fandom.com/wiki/Qsort
-function qsort(a,c,l,r)
-	c,l,r=c or function(a,b) return a<b end,l or 1,r or #a
-	if l<r then
-		if c(a[r],a[l]) then
-			a[l],a[r]=a[r],a[l]
-		end
-		local lp,k,rp,p,q=l+1,l+1,r-1,a[l],a[r]
-		while k<=rp do
-			local swaplp=c(a[k],p)
-			if swaplp or c(a[k],q) then
-			else
-				while c(q,a[rp]) and k<rp do
-					rp-=1
-				end
-				a[k],a[rp],swaplp=a[rp],a[k],c(a[rp],p)
-				rp-=1
-			end
-			if swaplp then
-				a[k],a[lp]=a[lp],a[k]
-				lp+=1
-			end
-			k+=1
-		end
-		lp-=1
-		rp+=1
-		a[l],a[lp]=a[lp],a[l]
-		a[r],a[rp]=a[rp],a[r]
-		qsort(a,c,l,lp-1       )
-		qsort(a,c,lp+1,rp-1  )
-		qsort(a,c,rp+1,r)
-	end
-end
-
---rotate
-rotate=function(t,cx,cy,r)
-	local c,s=cos(r),sin(r)
-	local x,y=t.x,t.y
-	nx=c*x+-s*y+cx
-	ny=s*x+c*y+cy
-	return {x=nx,y=ny}
+	return x1+((x2-x1)*(y-y1))/(y2-y1)
 end
 
 --get random
@@ -98,38 +56,75 @@ end
 draw_tri=function(t,c)
 	local c=c or 7
 	color(c)
-	for y=t[1].ny,t[2].ny do
-		local x1=
-		p2calc(t[1].nx,t[1].ny,
-		t[2].nx,t[2].ny,y)
-		local x2=
-		p2calc(t[1].nx,t[1].ny,
-		t[3].nx,t[3].ny,y)
-		rectfill(x1,y,x2,y)
+	--exclude triangles out of screen
+	local min_x=min(t[1].x,min(t[2].x,t[3].x))
+	if(min_x>127)return
+	local max_x=max(t[1].x,max(t[2].x,t[3].x))
+	if(max_x<0)return
+	local min_y=min(t[1].y,min(t[2].y,t[3].y))
+	if(min_y>127)return
+	local max_y=max(t[1].y,max(t[2].y,t[3].y))
+	if(max_y<0)return
+
+	--set numbers to interger
+	local x1,x2,x3,y1,y2,y3=
+	t[1].x&0xffff,
+	t[2].x&0xffff,
+	t[3].x&0xffff,
+	t[1].y&0xffff,
+	t[2].y&0xffff,
+	t[3].y&0xffff
+
+	if y2>y3 then
+		y2,y3=y3,y2
+		x2,x3=x3,x2
 	end
-	for y=t[2].ny,t[3].ny do
-		local x1=
-		p2calc(t[2].nx,t[2].ny,
-		t[3].nx,t[3].ny,y)
-		local x2=
-		p2calc(t[1].nx,t[1].ny,
-		t[3].nx,t[3].ny,y)
-		rectfill(x1,y,x2,y)
+	if y1>y2 then
+		y1,y2=y2,y1
+		x1,x2=x2,x1
+	end
+	if y2>y3 then
+		y2,y3=y3,y2
+		x2,x3=x3,x2
+	end
+	if y1!=y2 then
+		for y=y1,y2 do
+			local nx1=
+			p2calc(x1,y1,x2,y2,y)
+			local nx2=
+			p2calc(x1,y1,x3,y3,y)
+			rectfill(nx1,y,nx2,y)
+			draw+=1
+		end
+	end
+	if y2!=y3 then
+		for y=y2,y3 do
+			local nx1=
+			p2calc(x2,y2,x3,y3,y)
+			local nx2=
+			p2calc(x1,y1,x3,y3,y)
+			rectfill(nx1,y,nx2,y)
+			draw+=1
+		end
 	end
 end
 
-calc_tri=function(t,x,y)
-	local x,y=
-	x or 63,
-	y or 63
+calc_tri=function(t)
+	local n={}
 	for p in all(t) do
 		local np=rotate(p,t.cx,t.cy,cnt)
-		p.nx,p.ny=np.x,np.y
+		add(n,{x=np.x,y=np.y})
 	end
-	qsort(t,
-		function(a,b)
-		return a.ny < b.ny end
-	)
+	return n
+end
+
+--rotate
+rotate=function(t,cx,cy,r)
+	local c,s=cos(r),sin(r)
+	local x,y=t.x,t.y
+	nx=c*x+-s*y+cx
+	ny=s*x+c*y+cy
+	return {x=nx,y=ny}
 end
 __gfx__
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
