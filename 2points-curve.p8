@@ -1,5 +1,5 @@
 pico-8 cartridge // http://www.pico-8.com
-version 32
+version 36
 __lua__
 --bezier curve
 
@@ -22,6 +22,10 @@ function reset()--make points
 	}
 	t=0--timer
 	r={}--result point
+	step={}
+	for n=0,1,0.1 do
+		add(step,curve(s,g,p,n))
+	end
 end
 
 function _init()
@@ -29,17 +33,21 @@ function _init()
 end
 
 --return point of curve
-function curve(s,g,p)
+function curve(s,g,p,st)
+	-- s:start
+	-- g:goal
+	-- p:control point
+	-- st:step
 	local x,y=
-	(s.x-p.x*2+g.x)*t*t+
-	(-2*s.x+2*p.x)*t+s.x,
-	(s.y-p.y*2+g.y)*t*t+
-	(s.y*-2+p.y*2)*t+s.y
+	(s.x-p.x*2+g.x)*st*st+
+	(-2*s.x+2*p.x)*st+s.x,
+	(s.y-p.y*2+g.y)*st*st+
+	(s.y*-2+p.y*2)*st+s.y
 	return {x=x,y=y}
 end
 
 function _update()
-	r=curve(s,g,p)
+	r=curve(s,g,p,t)
 	t+=0.02
 	
 	if r.y>128 then
@@ -51,10 +59,15 @@ function _draw()
 	cls()
 	circfill(s.x,s.y,4,8)
 	print("s",s.x-1,s.y-2,7)
-	circfill(p.x,p.y,1,1)
+	circfill(p.x,p.y,1,9)
 	circfill(g.x,g.y,4,12)
 	print("g",g.x-1,g.y-2,7)
 	circfill(r.x,r.y,2,7)
+	
+	for n=1,#step-1 do
+		line(step[n].x,step[n].y,
+		step[n+1].x,step[n+1].y,n)
+	end
 end
 __gfx__
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
