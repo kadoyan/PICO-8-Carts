@@ -44,7 +44,9 @@ end
 
 --get x axis of the point on the line
 p2calc=function(x1,y1,x2,y2,y)
-	return x1+((x2-x1)*(y-y1))/(y2-y1)
+	local x=
+	x1+((x2-x1)*(y-y1))/(y2-y1)
+	return x
 end
 
 --get random

@@ -1,5 +1,5 @@
 pico-8 cartridge // http://www.pico-8.com
-version 29
+version 36
 __lua__
 _set_fps(60)
 pal(3,140,1)
@@ -40,7 +40,12 @@ for i=1,hw do
 end
 
 -- particle effect
-add(bb,{x=hx+(flr(rnd(hw*3)-hw*1.5)),y=hy-3,l=ceil(rnd(40))+20,c=6+flr(rnd(3))+1})
+add(bb,{
+	x=hx+(flr(rnd(hw*3)-hw*1.5)),
+	y=hy-3,
+	l=ceil(rnd(40))+20,
+	c=6+flr(rnd(3))+1
+})
 for b in all(bb) do
 	local x,n=b.x+sin((b.x+b.y)/50)*2,flr(rnd(#bb)+1)
 	pset(x,b.y,b.c)

@@ -1,5 +1,5 @@
 pico-8 cartridge // http://www.pico-8.com
-version 32
+version 36
 __lua__
 function _init()
 	rs=0
@@ -41,7 +41,8 @@ function _draw()
 		cls()
 		for y=0,127 do
 			local rx=ceil(sin(rs+y/100)*h)
-			sspr(0,y,128,1,rx,y,128,1)
+			local sh=abs(h)
+			sspr(0,y,127,1,rx-sh,y,128+sh*2,1)
 		end
 	end
 	memcpy(0,0x6000,128*64)
@@ -49,7 +50,8 @@ function _draw()
 		cls()
 		for x=0,127 do
 			local ry=ceil(sin(rs+x/100)*v)
-			sspr(x,0,1,128,x,ry,1,128)
+			local sv=abs(v)
+			sspr(x,0,1,127,x,ry-sv,1,128+sv*2)
 		end
 	end
 	memcpy(0,0x6000,128*64)
