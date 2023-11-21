@@ -2,10 +2,9 @@ pico-8 cartridge // http://www.pico-8.com
 version 41
 __lua__
 function fade(n)
-	local dpal,step={
+	local dpal={
 		0,1,1, 2,1,13,6,
-		4,4,9,3,13,1,13,14},
-		fadestep
+		4,4,9,3,13,1,13,14}
 	
 	local function chpal(i,j)
 		local col=j
@@ -14,12 +13,8 @@ function fade(n)
 		end
 		pal(j,col,1)
 	end
-	-- palette fade
-	local start=0
-	if n<0 then
-		start=16
-	end
-	for i=start,step,n do
+	local start=(n>0) and 0 or 16
+	for i=start,fadestep,n do
 		for j=1,15 do
 			chpal(i,j)
 		end
