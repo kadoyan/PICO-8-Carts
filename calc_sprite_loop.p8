@@ -22,7 +22,7 @@ color(12)
 ?"fs+((t%llen)\\(llen/spn))*spw"
 
 spr(
-fs+((t%llen)\(llen/spn))*spw,
+fs+(t%llen)\(llen/spn)*spw,
 48,58,2,2)
 
 ?"no1",34,83,5
