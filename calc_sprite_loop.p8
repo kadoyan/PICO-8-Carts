@@ -3,18 +3,24 @@ version 41
 __lua__
 t=0
 fs=1
-llen=9
+llen=15
 spn=3
 spw=2
 
 ::_::
 cls()
 t+=1
+if btnp(2) then
+llen+=1
+end
+if btnp(3) then
+llen-=1
+end
 
 color(6)
 ?"frame(t)="..t
 ?"first sprite(fs)=1"
-?"total loop flames(llen)=15"
+?"total loop flames(llen)="..llen
 ?"total sprite num(spn)=3"
 ?"sprite width(spw)=2"
 ?""
