@@ -19,7 +19,7 @@ color(6)
 ?"sprite width(spw)=2"
 ?""
 color(12)
-?"fs+((t%llen)\\(llen/spn))*spw"
+?"fs+(t%llen)\\(llen/spn)*spw"
 
 spr(
 fs+(t%llen)\(llen/spn)*spw,
