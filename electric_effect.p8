@@ -1,7 +1,7 @@
 pico-8 cartridge // http://www.pico-8.com
 version 41
 __lua__
-function biri2()
+function biri2(a,b)
 	local step,points=20,{}
 	local w,h=
 	(a.x-b.x)/step,
@@ -20,11 +20,11 @@ function biri2()
 	end
 end
 function makepoints()
-	a={
+	p1={
 		x=rnd(127),
 		y=rnd(127)
 	}
-	b={
+	p2={
 		x=rnd(127),
 		y=rnd(127)
 	}
@@ -36,7 +36,7 @@ cls()
 if btnp(4) then
 	makepoints()
 end
-biri2()
+biri2(p1,p2)
 
 flip()
 goto _
