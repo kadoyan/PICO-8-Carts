@@ -1,41 +1,59 @@
 pico-8 cartridge // http://www.pico-8.com
 version 41
 __lua__
-function fade(n)
-	local dpal={
-		0,1,1, 2,1,13,6,
-		4,4,9,3,13,1,13,14}
-	
-	local function chpal(i,j)
-		local col=j
-		for k=1,((i+(j%5))/4) do
-			col=dpal[col]
+function fader(n)
+	return {
+		new=function(self)
+			self.dpal={0,1,1,2,1,13,6,4,4,9,3,13,1,13,14}
+			self.fadestep=0
+		end,
+		fade=function(self,n)
+			local start=(n>0) and 0 or 16
+			for i=start,self.fadestep,n do
+				for j=1,15 do
+					local col=j
+					for k=1,((i+(j%5))/4) do
+						col=self.dpal[col]
+					end
+					pal(j,col,1)
+				end
+			end
+			self.fadestep=mid(-1,self.fadestep+n,16)
+			if self.fadestep<0 or self.fadestep>15 then
+				return true
+			end
+			return false
 		end
-		pal(j,col,1)
-	end
-	local start=(n>0) and 0 or 16
-	for i=start,fadestep,n do
-		for j=1,15 do
-			chpal(i,j)
-		end
-	end
-	fadestep=mid(0,fadestep+n,16)
+	}
 end
 
-fadestep=0
-n=1
-
-::😐::
-cls()
-spr(1,23,32,10,10)
-print("press z(🅾️) key",32,90,7)
-print("2023 kadoyan",38,118,6)
-if btnp(🅾️) then
-	n*=-1
+function _init()
+	fade=fader()
+	fade:new()
+	inout=-1
+	message=""
 end
-fade(n)
-flip()
-goto 😐
+
+
+function _update60()
+	if fade:fade(inout) then
+		message="done."
+		pal(12,7,1)
+	else
+		message="fading"
+	end
+end
+
+function _draw()cls()
+	spr(1,23,32,10,10)
+	print("press z(🅾️) key",32,90,7)
+	print("2025 kadoyan",38,118,6)
+	print(message,1,120,12)
+	if btnp(🅾️) then
+		inout*=-1
+	end
+end
+
 __gfx__
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
