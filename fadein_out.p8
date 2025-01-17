@@ -4,8 +4,8 @@ __lua__
 function fader(n)
 	return {
 		new=function(self)
-			self.dpal={0,1,1,2,1,13,6,4,4,9,3,13,1,13,14}
-			self.fadestep=0
+			self.dpal={0,1,1,2,1,13,6,4,4,4,3,13,1,13,14}
+			self.fadestep=15
 		end,
 		fade=function(self,n)
 			local start=(n>0) and 0 or 16
@@ -30,7 +30,7 @@ end
 function _init()
 	fade=fader()
 	fade:new()
-	inout=-1
+	inout=1
 	message=""
 end
 
@@ -44,7 +44,15 @@ function _update60()
 	end
 end
 
-function _draw()cls()
+function _draw()
+	cls()
+	printh("---")
+	for i=0,255,16 do
+		local y=flr(i/128) * 16
+		local x=i%128
+		printh(x..","..y..","..i/16)
+		rectfill(x,y,x+16,y+16,i/16)
+	end
 	spr(1,23,32,10,10)
 	print("press z(🅾️) key",32,90,7)
 	print("2025 kadoyan",38,118,6)
